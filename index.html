@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>d3.js with leaflet.js</title>
+
+    <link
+        rel="stylesheet"
+        href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
+    />
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <script
+        src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+    </script>
+
+</head>
+<body>
+
+	<div id="map" style="width: 100%; height: 800px"></div>
+
+	<script type="text/javascript">
+				// var w = window.innerWidth;
+				// var h = window.innerHeight;
+				// document.getElementById("map").style.width = w;
+				// document.getElementById("map").style.height = h;
+        var map = L.map('map').setView([-2.373344,99.545467], 4);
+        mapLink =
+            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
+            }).addTo(map);
+
+	/* Initialize the SVG layer */
+	map._initPathRoot()
+
+	/* We simply pick up the SVG from the map object */
+	var svg = d3.select("#map").select("svg"),
+	g = svg.append("g");
+
+	d3.json("gege.geojson", function(collection) {
+		//var layer = L.latLngBounds(collection.features[0].geometry.coordinates);
+		var num = collection.features.length/2;
+		var centerpos = num.toFixed();
+		var latlang = new L.LatLng(collection.features[centerpos].geometry.coordinates[0][1], collection.features[centerpos].geometry.coordinates[0][0]);
+		map.setView(latlang, 10);
+		var geojsonMarkerOptions = {
+		    radius: 8,
+		    fillColor: "#ff7800",
+		    color: "#000",
+		    weight: 1,
+		    opacity: 1,
+		    fillOpacity: 0.8
+		};
+		L.geoJson(collection,{
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+    }
+}).addTo(map);
+		//L.control({position:"topleft"});
+	})
+</script>
+</body>
+</html>
