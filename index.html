@@ -39,7 +39,7 @@
 	var svg = d3.select("#map").select("svg"),
 	g = svg.append("g");
 
-	d3.json("gege.geojson", function(collection) {
+	d3.json("gege3.geojson", function(collection) {
 		//var layer = L.latLngBounds(collection.features[0].geometry.coordinates);
 		var num = collection.features.length/2;
 		var centerpos = num.toFixed();
@@ -53,11 +53,17 @@
 		    opacity: 1,
 		    fillOpacity: 0.8
 		};
-		L.geoJson(collection,{
-    pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, geojsonMarkerOptions);
-    }
-}).addTo(map);
+		function style(feature) {
+    	return {
+						radius: 8,
+						fillColor: "#ff7800",
+						color: "red",
+						weight: 1,
+						opacity: 1,
+						fillOpacity: 0.8
+            };
+		}
+		L.geoJson(collection,{style: style}).addTo(map);
 		//L.control({position:"topleft"});
 	})
 </script>
